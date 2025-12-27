@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, MapPin, Shield, Coins, Globe, Camera, Save, CheckCircle } from "lucide-react";
+import { ArrowLeft, MapPin, Shield, Coins, Globe, Camera, Save, CheckCircle, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import BackgroundEffects from "@/components/BackgroundEffects";
+import { getContract } from "@/web3/contract";
+import SuccessModal from "@/components/modals/SuccessModal";
 
 interface NewPlace {
   name: string;
@@ -28,6 +30,16 @@ const Marketplace = () => {
   const [savedPlace, setSavedPlace] = useState<NewPlace | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [blockchainSuccessOpen, setBlockchainSuccessOpen] = useState(false);
+
+  // Function to upload image to IPFS (mock implementation)
+  const uploadToIPFS = async (file: File): Promise<string> => {
+    // In a real implementation, you would upload to IPFS here
+    // For now, we'll create a mock IPFS hash
+    const mockHash = `QmExample${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
+    return `ipfs://${mockHash}`;
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -60,27 +72,63 @@ const Marketplace = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (newPlace.name && newPlace.latitude && newPlace.longitude) {
-      // Create image preview URL if image exists
-      let previewUrl = null;
-      if (newPlace.image) {
-        previewUrl = URL.createObjectURL(newPlace.image);
-        setImagePreviewUrl(previewUrl);
+      try {
+        setLoading(true);
+
+        // Create image preview URL if image exists
+        let previewUrl = null;
+        let imageHash = "";
+        
+        if (newPlace.image) {
+          previewUrl = URL.createObjectURL(newPlace.image);
+          setImagePreviewUrl(previewUrl);
+          
+          // Upload image to IPFS
+          imageHash = await uploadToIPFS(newPlace.image);
+        }
+
+        // Save to blockchain
+        const contract = await getContract();
+        
+        // Create a title that includes location info
+        const placeTitle = `${newPlace.name} (${newPlace.latitude}, ${newPlace.longitude})`;
+        
+        // 🔐 WALLET POPUP + SIGNER VERIFICATION
+        const tx = await contract.saveImage(imageHash || "ipfs://placeholder", placeTitle);
+        
+        // ⛓ WAIT FOR BLOCK CONFIRMATION
+        await tx.wait();
+        
+        // Show local success modal first
+        setSavedPlace({ ...newPlace });
+        setShowSuccessModal(true);
+        
+        // Reset form
+        setNewPlace({
+          name: "",
+          latitude: "",
+          longitude: "",
+          image: null
+        });
+        
+        // Reset file input
+        const fileInput = document.getElementById('image-upload') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+        
+        // Show blockchain success after local modal
+        setTimeout(() => {
+          setShowSuccessModal(false);
+          setBlockchainSuccessOpen(true);
+        }, 2000);
+        
+      } catch (error) {
+        console.error("Save failed:", error);
+        alert("Transaction failed or rejected. Please try again.");
+      } finally {
+        setLoading(false);
       }
-      
-      setSavedPlace({ ...newPlace });
-      setShowSuccessModal(true);
-      // Reset form
-      setNewPlace({
-        name: "",
-        latitude: "",
-        longitude: "",
-        image: null
-      });
-      // Reset file input
-      const fileInput = document.getElementById('image-upload') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
     }
   };
 
@@ -358,10 +406,19 @@ const Marketplace = () => {
                   variant="gold"
                   className="w-full"
                   onClick={handleSave}
-                  disabled={!isFormValid}
+                  disabled={!isFormValid || loading}
                 >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save New Place
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving to Blockchain...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save New Place
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -441,6 +498,11 @@ const Marketplace = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Blockchain Success Modal */}
+      {blockchainSuccessOpen && (
+        <SuccessModal onClose={() => setBlockchainSuccessOpen(false)} />
+      )}
     </main>
   );
 };
