@@ -97,12 +97,14 @@ const MapComponent: React.FC<MapComponentProps> = ({
     const fetchSites = async () => {
       try {
         // Use custom sites if provided, otherwise fetch from API
-        if (customSites) {
+        if (customSites && customSites.length > 0) {
+          console.log("MapComponent: Using custom sites:", customSites);
           setSites(customSites);
           setLoading(false);
           return;
         }
         
+        console.log("MapComponent: Fetching from API or using fallback");
         // Pointing to your Requestly Bridge
         const response = await fetch('https://api.sonarkolkata.com/heritage-sites');
         const data = await response.json();
