@@ -1,7 +1,11 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
 
-const HeroCard = () => {
+interface HeroCardProps {
+  onGetStarted: () => void;
+}
+
+const HeroCard = ({ onGetStarted }: HeroCardProps) => {
   return (
     <div className="relative w-full max-w-lg mx-auto animate-fade-in-delay-1">
       {/* Ambient glow behind card */}
@@ -41,7 +45,12 @@ const HeroCard = () => {
 
           {/* CTA Button */}
           <div className="pt-4 animate-fade-in-delay-3">
-            <Button variant="gold" size="xl" className="group animate-glow-pulse">
+            <Button 
+              variant="gold" 
+              size="xl" 
+              className="group animate-glow-pulse"
+              onClick={onGetStarted}
+            >
               Get Started
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Button>
