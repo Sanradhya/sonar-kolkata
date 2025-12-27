@@ -1,4 +1,5 @@
 import { MapPin, Mail, Twitter, Instagram, Facebook } from "lucide-react";
+import logo from "@/assets/logo/logo.png";
 
 const Footer = () => {
   return (
@@ -7,12 +8,16 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-6 h-6 text-gold" />
-              <span className="font-display text-2xl font-bold">
-                <span className="text-gradient-gold">Sonar</span>{" "}
-                <span className="text-foreground">Kolkata</span>
-              </span>
+            <div className="flex items-center gap-3 mb-4">
+              <img 
+                src={logo} 
+                alt="Sonar Kolkata Logo" 
+                className="w-8 h-8 object-contain"
+              />
+              <div className="flex items-center gap-2">
+                <span className="font-display text-2xl font-bold">শোনার</span>
+                <span className="font-malinton text-2xl font-bold text-gradient-gold">Kolkata</span>
+              </div>
             </div>
             <p className="text-muted-foreground mb-6 max-w-md">
               Experience the city of joy through a new lens. Discover heritage, 

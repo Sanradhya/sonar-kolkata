@@ -25,6 +25,9 @@ import stPaulsCathedral from "@/assets/places/st_pauls.jpg";
 // Import background music
 import monsoonRaga from "@/assets/music/MonsoonRaga.mp3";
 
+// Import logo
+import logo from "@/assets/logo/logo.png";
+
 // Image mapping based on place names
 const getPlaceImage = (placeName: string): string | null => {
   const normalizedName = placeName.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -310,8 +313,16 @@ const PlaceDetailModal = ({ open, onOpenChange, onBackToMap, place }: PlaceDetai
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-              <DialogTitle className="font-display text-xl text-foreground">
-                Place Details
+              <DialogTitle className="font-display text-xl text-foreground flex items-center gap-3">
+                <img 
+                  src={logo} 
+                  alt="Sonar Kolkata Logo" 
+                  className="w-6 h-6 object-contain"
+                />
+                <div className="flex items-center gap-2">
+                  <span>শোনার</span>
+                  <span className="font-malinton">Kolkata</span>
+                </div>
               </DialogTitle>
             </div>
             

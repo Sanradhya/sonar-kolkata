@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { X, Maximize2, Settings, MapPin } from "lucide-react";
 import MapComponent from "@/components/MapComponent";
 import PlaceDetailModal from "@/components/modals/PlaceDetailModal";
+import logo from "@/assets/logo/logo.png";
 
 interface HeritageSite {
   id: number;
@@ -173,8 +174,17 @@ const InteractiveMapModal = ({ open, onOpenChange }: InteractiveMapModalProps) =
         <DialogContent className="glass-card border-border/30 max-w-6xl max-h-[85vh] p-0">
           <DialogHeader className="p-6 pb-0">
             <div className="flex items-center justify-between">
-              <DialogTitle className="font-display text-2xl">
-                <span className="text-gradient-gold">Explore</span> Kolkata Heritage
+              <DialogTitle className="font-display text-2xl flex items-center gap-3">
+                <img 
+                  src={logo} 
+                  alt="Sonar Kolkata Logo" 
+                  className="w-8 h-8 object-contain"
+                />
+                <div className="flex items-center gap-2">
+                  <span>শোনার</span>
+                  <span className="font-malinton text-gradient-gold">Kolkata</span>
+                  <span className="text-muted-foreground text-lg ml-2">Heritage</span>
+                </div>
                 {isFilteredView && (
                   <span className="text-sm text-gold ml-2">
                     ({filteredSites.length} selected)

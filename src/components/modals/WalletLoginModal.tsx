@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Wallet, Shield, Sparkles } from "lucide-react";
+import logo from "@/assets/logo/logo.png";
 
 interface WalletLoginModalProps {
   open: boolean;
@@ -30,13 +31,18 @@ const WalletLoginModal = ({ open, onOpenChange, onLoginSuccess }: WalletLoginMod
       <DialogContent className="glass-card border-border/30 max-w-md">
         <DialogHeader className="text-center pb-2">
           <div className="mx-auto w-16 h-16 rounded-2xl bg-gold/20 flex items-center justify-center mb-4">
-            <Wallet className="w-8 h-8 text-gold" />
+            <img 
+              src={logo} 
+              alt="Sonar Kolkata Logo" 
+              className="w-10 h-10 object-contain"
+            />
           </div>
-          <DialogTitle className="font-display text-2xl">
-            <span className="text-gradient-gold">Connect</span> Wallet
+          <DialogTitle className="font-display text-2xl flex items-center justify-center gap-2">
+            <span>শোনার</span>
+            <span className="font-malinton text-gradient-gold">Kolkata</span>
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Choose your preferred wallet to continue exploring Kolkata
+            Choose your preferred wallet to continue exploring heritage
           </DialogDescription>
         </DialogHeader>
 
