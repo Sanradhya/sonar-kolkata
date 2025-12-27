@@ -1,0 +1,43 @@
+# AWS CodeBuild buildspec for Sonar Kolkata
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo Installing dependencies...
+      - npm install -g npm@latest
+      
+  pre_build:
+    commands:
+      - echo Logging build information...
+      - echo Build started on `date`
+      - echo Node version $(node --version)
+      - echo NPM version $(npm --version)
+      - echo Installing project dependencies...
+      - npm ci
+      
+  build:
+    commands:
+      - echo Build phase started on `date`
+      - echo Building the React application...
+      - npm run build
+      - echo Build completed on `date`
+      
+  post_build:
+    commands:
+      - echo Post-build phase started on `date`
+      - echo Listing build artifacts...
+      - ls -la dist/
+      - echo Build artifacts ready for deployment
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist
+  name: sonar-kolkata-build-$(date +%Y-%m-%d-%H-%M-%S)
+
+cache:
+  paths:
+    - node_modules/**/*

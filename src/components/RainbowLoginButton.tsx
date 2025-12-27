@@ -32,7 +32,7 @@ export default function RainbowLoginButton() {
               disabled
             >
               <LogIn className="w-4 h-4" />
-              <span className="hidden sm:inline">Login</span>
+              <span className="hidden sm:inline">Loading...</span>
             </Button>
           );
         }
@@ -47,7 +47,7 @@ export default function RainbowLoginButton() {
               type="button"
             >
               <LogIn className="w-4 h-4" />
-              <span className="hidden sm:inline">Login</span>
+              <span className="hidden sm:inline">Connect Wallet</span>
             </Button>
           );
         }
