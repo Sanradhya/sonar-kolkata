@@ -1,25 +1,85 @@
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import HeroCard from "@/components/HeroCard";
 import BackgroundEffects from "@/components/BackgroundEffects";
+import FeaturesSection from "@/components/landing/FeaturesSection";
+import WhyUseSection from "@/components/landing/WhyUseSection";
+import InfoSection from "@/components/landing/InfoSection";
+import Footer from "@/components/landing/Footer";
+import WalletLoginModal from "@/components/modals/WalletLoginModal";
+import MapModal from "@/components/modals/MapModal";
+import PlaceDetailModal from "@/components/modals/PlaceDetailModal";
 
 const Index = () => {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
+  const [showPlaceModal, setShowPlaceModal] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState<{ id: string; name: string } | null>(null);
+
+  const handleGetStarted = () => {
+    setShowLoginModal(true);
+  };
+
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false);
+    setShowMapModal(true);
+  };
+
+  const handleLocationSelect = (location: { id: string; name: string }) => {
+    setSelectedPlace(location);
+    setShowMapModal(false);
+    setShowPlaceModal(true);
+  };
+
+  const handleBackToMap = () => {
+    setShowPlaceModal(false);
+    setShowMapModal(true);
+  };
+
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative min-h-screen overflow-x-hidden">
       {/* Background layers */}
       <BackgroundEffects />
       
       {/* Navigation */}
       <Navbar />
       
-      {/* Main content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 pt-16">
-        <HeroCard />
-      </div>
+      {/* Hero Section */}
+      <section className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 pt-16">
+        <HeroCard onGetStarted={handleGetStarted} />
+      </section>
+
+      {/* Features Section */}
+      <FeaturesSection />
+
+      {/* Why Use Section */}
+      <WhyUseSection />
+
+      {/* Info Section */}
+      <InfoSection />
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Modals */}
+      <WalletLoginModal
+        open={showLoginModal}
+        onOpenChange={setShowLoginModal}
+        onLoginSuccess={handleLoginSuccess}
+      />
       
-      {/* Floating decorative elements */}
-      <div className="fixed bottom-8 left-8 text-muted-foreground/30 text-xs font-mono hidden lg:block animate-fade-in-delay-3">
-        <span>© 2025 Sonar Kolkata</span>
-      </div>
+      <MapModal
+        open={showMapModal}
+        onOpenChange={setShowMapModal}
+        onLocationSelect={handleLocationSelect}
+      />
+      
+      <PlaceDetailModal
+        open={showPlaceModal}
+        onOpenChange={setShowPlaceModal}
+        onBack={handleBackToMap}
+        place={selectedPlace}
+      />
     </main>
   );
 };
