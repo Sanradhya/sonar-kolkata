@@ -9,9 +9,8 @@ if (!projectId) {
 }
 
 export const wagmiConfig = getDefaultConfig({
-  appName: "Sonar",
+  appName: "Sonar Kolkata",
   projectId,
-  // Pick what you actually support:
   chains: [mainnet, base, polygon, arbitrum, optimism, sepolia],
   ssr: false, // Vite SPA
 });

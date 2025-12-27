@@ -6,6 +6,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import MapPage from "./pages/MapPage";
 import Marketplace from "./pages/Marketplace";
+import { SimpleMetaMaskDebug } from "./components/SimpleMetaMaskDebug";
  
 const App = () => (
   <TooltipProvider>
@@ -18,6 +19,8 @@ const App = () => (
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
+    {/* Simple debug component */}
+    <SimpleMetaMaskDebug />
   </TooltipProvider>
 );
 
