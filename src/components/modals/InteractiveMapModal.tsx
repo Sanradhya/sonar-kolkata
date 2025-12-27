@@ -20,10 +20,22 @@ interface InteractiveMapModalProps {
 
 const InteractiveMapModal = ({ open, onOpenChange }: InteractiveMapModalProps) => {
   const [showPlaceModal, setShowPlaceModal] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<{ id: string; name: string } | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<{ 
+    id: string; 
+    name: string; 
+    lat?: number; 
+    lng?: number; 
+    history_details?: string; 
+  } | null>(null);
 
   const handleLocationSelect = (site: HeritageSite) => {
-    setSelectedPlace({ id: site.id.toString(), name: site.name });
+    setSelectedPlace({ 
+      id: site.id.toString(), 
+      name: site.name,
+      lat: site.lat,
+      lng: site.lng,
+      history_details: site.history_details
+    });
     setShowPlaceModal(true);
   };
 

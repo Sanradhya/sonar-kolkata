@@ -15,7 +15,13 @@ const Index = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPlaceModal, setShowPlaceModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<{ id: string; name: string } | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<{ 
+    id: string; 
+    name: string; 
+    lat?: number; 
+    lng?: number; 
+    history_details?: string; 
+  } | null>(null);
   const navigate = useNavigate();
 
   const handleGetStarted = () => {

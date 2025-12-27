@@ -1,7 +1,78 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Star, ArrowLeft, ExternalLink } from "lucide-react";
+
+// Import all available place images
 import victoriaMemorial from "@/assets/places/victoria-memorial.jpg";
+import howrahBridge from "@/assets/places/howrah.jpg";
+import kalighatTemple from "@/assets/places/kalighat.jpg";
+import collegeStreet from "@/assets/places/college_st.jpg";
+import parkStreet from "@/assets/places/park_st.jpg";
+import dakshineswarTemple from "@/assets/places/dakshineswar.jpg";
+import belurMath from "@/assets/places/belur_math.jpg";
+import birlaPlanetarium from "@/assets/places/birla_planet.jpg";
+import edenGardens from "@/assets/places/eden_gardens.jpg";
+import indianMuseum from "@/assets/places/indian_museum.jpg";
+import jorasankoThakurBari from "@/assets/places/jorasanko.jpg";
+import marblePalace from "@/assets/places/marble_palace.jpg";
+import motherHouse from "@/assets/places/mother_house.jpg";
+import princepGhat from "@/assets/places/princep_ghat.jpg";
+import scienceCity from "@/assets/places/science_city.jpg";
+import stPaulsCathedral from "@/assets/places/st_pauls.jpg";
+
+// Image mapping based on place names
+const getPlaceImage = (placeName: string): string | null => {
+  const normalizedName = placeName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  const imageMap: Record<string, string> = {
+    // Exact matches from the place names
+    'victoriamemorial': victoriaMemorial,
+    'howrahbridge': howrahBridge,
+    'indianmuseum': indianMuseum,
+    'marblepalace': marblePalace,
+    'birlaplanetarium': birlaPlanetarium,
+    'stpaulscathedral': stPaulsCathedral,
+    'kalighattemple': kalighatTemple,
+    'dakshineswartemple': dakshineswarTemple,
+    'belurmath': belurMath,
+    'jorasankothakurbari': jorasankoThakurBari,
+    'sciencecity': scienceCity,
+    'collegestreet': collegeStreet,
+    'parkstreet': parkStreet,
+    'edengardens': edenGardens,
+    'princepghat': princepGhat,
+    'motherhouse': motherHouse,
+    
+    // Alternative variations
+    'kalighat': kalighatTemple,
+    'dakshineswar': dakshineswarTemple,
+    'jorasanko': jorasankoThakurBari,
+    'stpauls': stPaulsCathedral,
+    'birla': birlaPlanetarium,
+    'planetarium': birlaPlanetarium,
+    'howrah': howrahBridge,
+    'victoria': victoriaMemorial,
+    'indian': indianMuseum,
+    'museum': indianMuseum,
+    'marble': marblePalace,
+    'palace': marblePalace,
+    'belur': belurMath,
+    'math': belurMath,
+    'science': scienceCity,
+    'city': scienceCity,
+    'college': collegeStreet,
+    'street': collegeStreet,
+    'park': parkStreet,
+    'eden': edenGardens,
+    'gardens': edenGardens,
+    'princep': princepGhat,
+    'ghat': princepGhat,
+    'mother': motherHouse,
+    'house': motherHouse
+  };
+  
+  return imageMap[normalizedName] || null;
+};
 
 interface PlaceDetailModalProps {
   open: boolean;
@@ -10,71 +81,30 @@ interface PlaceDetailModalProps {
   place: {
     id: string;
     name: string;
+    lat?: number;
+    lng?: number;
+    history_details?: string;
   } | null;
 }
-
-const placeDetails: Record<string, { 
-  image: string; 
-  name: string; 
-  description: string; 
-  timing: string; 
-  rating: number;
-  location: string;
-}> = {
-  victoria: {
-    image: victoriaMemorial,
-    name: "Victoria Memorial",
-    description: "The Victoria Memorial is a large marble building in Kolkata, dedicated to the memory of Queen Victoria. It was built between 1906 and 1921 and is now a museum and tourist destination. The memorial lies on the Maidan and is one of the most famous monuments in Kolkata. The building is made of white Makrana marble and combines British and Mughal architecture. The surrounding gardens, designed by Lord Redesdale and David Prain, span 64 acres and feature beautiful lawns, ornamental pools, and a variety of trees.",
-    timing: "10:00 AM - 5:00 PM (Closed on Mondays)",
-    rating: 4.8,
-    location: "Queen's Way, Maidan, Kolkata"
-  },
-  howrah: {
-    image: victoriaMemorial,
-    name: "Howrah Bridge",
-    description: "Howrah Bridge is a cantilever bridge with a suspended span over the Hooghly River in West Bengal. It was commissioned in 1943 and is one of the busiest cantilever bridges in the world, carrying a daily traffic of approximately 100,000 vehicles and countless pedestrians. The bridge is an engineering marvel and an iconic symbol of Kolkata's heritage.",
-    timing: "Open 24 hours",
-    rating: 4.7,
-    location: "Howrah, Kolkata"
-  },
-  kalighat: {
-    image: victoriaMemorial,
-    name: "Kalighat Temple",
-    description: "Kalighat Kali Temple is one of the 51 Shakti Peethas of India, dedicated to the Hindu goddess Kali. The present temple was built in 1809 and is one of the most famous temples in Kolkata. The temple attracts thousands of devotees daily and holds special significance during the festivals of Kali Puja and Durga Puja.",
-    timing: "5:00 AM - 2:00 PM, 5:00 PM - 10:30 PM",
-    rating: 4.5,
-    location: "Kalighat, Kolkata"
-  },
-  "college-street": {
-    image: victoriaMemorial,
-    name: "College Street",
-    description: "College Street, known as Boi Para (Book Town) in Bengali, is one of the largest book markets in the world. Home to historic institutions like Presidency University and Sanskrit College, the street is the intellectual heart of Kolkata. The iconic Indian Coffee House here has been a meeting point for intellectuals, poets, and revolutionaries since 1876.",
-    timing: "10:00 AM - 8:00 PM",
-    rating: 4.6,
-    location: "College Street, Kolkata"
-  },
-  "park-street": {
-    image: victoriaMemorial,
-    name: "Park Street",
-    description: "Park Street is an iconic boulevard in Kolkata known for its restaurants, cafes, and nightlife. Once called the 'Street That Never Sleeps', it hosts some of the city's oldest and most famous eateries including Flurys, Mocambo, and Peter Cat. The street comes alive during Christmas and New Year celebrations.",
-    timing: "Open 24 hours",
-    rating: 4.7,
-    location: "Park Street, Kolkata"
-  },
-  dakshineswar: {
-    image: victoriaMemorial,
-    name: "Dakshineswar Temple",
-    description: "Dakshineswar Kali Temple is a Hindu temple located on the eastern bank of the Hooghly River. The temple was built in 1855 by Rani Rashmoni and is famous for its association with the mystic Ramakrishna Paramahamsa. The temple complex includes twelve identical Shiva temples and a Radha-Krishna temple.",
-    timing: "6:00 AM - 12:30 PM, 3:00 PM - 8:30 PM",
-    rating: 4.8,
-    location: "Dakshineswar, Kolkata"
-  }
-};
 
 const PlaceDetailModal = ({ open, onOpenChange, onBackToMap, place }: PlaceDetailModalProps) => {
   if (!place) return null;
 
-  const details = placeDetails[place.id] || placeDetails.victoria;
+  // Get the appropriate image for this place
+  const placeImage = getPlaceImage(place.name);
+  
+  // Debug log to see what's being matched
+  console.log(`Place: "${place.name}" -> Normalized: "${place.name.toLowerCase().replace(/[^a-z0-9]/g, '')}" -> Image: ${placeImage ? 'Found' : 'Not found'}`);
+
+  // Use the actual place data instead of hardcoded details
+  const details = {
+    image: placeImage,
+    name: place.name,
+    description: place.history_details || "Discover the rich history and cultural significance of this heritage site in Kolkata. Each location tells a unique story of the city's past, present, and future.",
+    timing: "Please check local timings",
+    rating: 4.5, // Default rating
+    location: place.lat && place.lng ? `${place.lat.toFixed(4)}, ${place.lng.toFixed(4)}` : "Kolkata, West Bengal"
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -99,11 +129,20 @@ const PlaceDetailModal = ({ open, onOpenChange, onBackToMap, place }: PlaceDetai
           {/* Left - Image and Name */}
           <div className="space-y-4">
             <div className="aspect-square rounded-xl overflow-hidden border border-border/30">
-              <img
-                src={details.image}
-                alt={details.name}
-                className="w-full h-full object-cover"
-              />
+              {details.image ? (
+                <img
+                  src={details.image}
+                  alt={details.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-black flex items-center justify-center">
+                  <div className="text-center text-white/60">
+                    <MapPin className="w-12 h-12 mx-auto mb-2 opacity-40" />
+                    <p className="text-sm">No image available</p>
+                  </div>
+                </div>
+              )}
             </div>
             <h2 className="font-display text-2xl font-bold text-gradient-gold">
               {details.name}
