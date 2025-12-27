@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+.leaflet-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Enhanced heritage marker styles */
+.heritage-marker {
+  filter: drop-shadow(0 2px 4px rgba(165, 42, 42, 0.3));
+  transition: all 0.3s ease;
+}
+
+.heritage-marker:hover {
+  filter: drop-shadow(0 4px 8px rgba(165, 42, 42, 0.5));
+  transform: scale(1.1);
+}
+
+/* Enhanced marker cluster styling */
+.marker-cluster {
+  background: #A52A2A !important;
+  border: 3px solid white !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 15px rgba(165, 42, 42, 0.6) !important;
+}
+
+.marker-cluster div {
+  background: #A52A2A !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+}
+
+.marker-cluster-small {
+  background: #A52A2A !important;
+}
+
+.marker-cluster-medium {
+  background: #A52A2A !important;
+}
+
+.marker-cluster-large {
+  background: #A52A2A !important;
+}
