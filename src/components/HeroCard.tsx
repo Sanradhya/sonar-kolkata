@@ -11,82 +11,84 @@ const HeroCard = ({ onGetStarted }: HeroCardProps) => {
   const { isConnected } = useAccount();
 
   return (
-    <div className="relative w-full max-w-lg mx-auto animate-fade-in-delay-1">
-      {/* Ambient glow behind card */}
-      <div className="absolute -inset-4 bg-gradient-to-r from-mustard/20 via-gold/10 to-mustard/20 rounded-3xl blur-3xl opacity-60 animate-pulse-soft" />
-      
-      {/* Main glassmorphic card */}
-      <div className="relative glass-card rounded-2xl p-8 sm:p-10 shadow-card border border-border/30 overflow-hidden">
-        {/* Decorative corner accent */}
-        <div className="absolute top-0 right-0 w-32 h-32 gold-gradient opacity-10 blur-2xl" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-mustard/20 blur-2xl" />
-        
-        {/* Content */}
-        <div className="relative z-10 text-center space-y-6">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/60 border border-border/40 animate-fade-in-delay-2">
-            <Sparkles className="w-3.5 h-3.5 text-gold" />
-            <span className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
-              Discover Kolkata
+    <div className="relative w-full text-center space-y-8 animate-fade-in-delay-1 py-12">
+      {/* Ambient background effects */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-pulse-soft" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-mustard/5 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }} />
+      </div>
+
+      {/* Badge */}
+      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-gold/20 animate-fade-in-delay-2 backdrop-blur-sm">
+        <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
+        <span className="text-xs font-medium text-gold tracking-widest uppercase">
+          Discover Heritage
+        </span>
+      </div>
+
+      {/* Title - Full Width */}
+      <div className="space-y-6">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none">
+          <span 
+            className="bg-gradient-to-r from-gold via-white to-gold bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_100%] drop-shadow-sm mr-4 sm:mr-6 md:mr-8"
+          >
+            শোনার
+          </span>
+          <span className="font-malinton text-foreground drop-shadow-sm">Kolkata</span>
+        </h1>
+        <div className="flex items-center justify-center gap-4 max-w-4xl mx-auto">
+          <div className="h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent flex-1"></div>
+          <p className="text-muted-foreground text-sm sm:text-base lg:text-lg font-medium tracking-widest uppercase px-6 whitespace-nowrap">
+            POWERED BY{" "}
+            <span className="bg-gradient-to-r from-gold via-mustard to-gold bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_100%] font-bold drop-shadow-sm">
+              KIWI
             </span>
-          </div>
-
-          {/* Title */}
-          <div className="space-y-2">
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-              <span className="text-gradient-gold">Sonar</span>{" "}
-              <span className="text-foreground">Kolkata</span>
-            </h1>
-            <p className="text-muted-foreground text-sm sm:text-base font-medium tracking-wide">
-              Powered by <span className="text-gold font-semibold">Kiwi</span>
-            </p>
-          </div>
-
-          {/* Description */}
-          <p className="text-foreground/80 text-base sm:text-lg leading-relaxed max-w-md mx-auto animate-fade-in-delay-3">
-            Experience the city of joy through a new lens. Explore heritage, culture, and hidden gems.
           </p>
+          <div className="h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent flex-1"></div>
+        </div>
+      </div>
 
-          {/* CTA Button */}
-          <div className="pt-4 animate-fade-in-delay-3">
-            {isConnected ? (
+      {/* Description */}
+      <div className="max-w-3xl mx-auto space-y-6">
+        <p className="text-foreground/90 text-xl sm:text-2xl leading-relaxed animate-fade-in-delay-3 font-medium text-center">
+          <span className="text-gold font-semibold">Listen</span> to the stories of the <span className="text-gold font-semibold">city of joy</span>.
+        </p>
+        <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed text-center">
+          Hear the <span className="text-gradient-gold">heritage</span>, feel the <span className="text-gradient-gold">culture</span>, and discover <span className="text-gradient-gold">hidden tales</span>.
+        </p>
+      </div>
+
+      {/* CTA Button */}
+      <div className="pt-8 animate-fade-in-delay-3">
+        {isConnected ? (
+          <Button 
+            variant="gold" 
+            size="xl" 
+            className="group text-lg px-8 py-4"
+            onClick={onGetStarted}
+          >
+            Get Started
+            <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+          </Button>
+        ) : (
+          <ConnectButton.Custom>
+            {({ openConnectModal }) => (
               <Button 
                 variant="gold" 
                 size="xl" 
-                className="group"
-                onClick={onGetStarted}
+                className="group text-lg px-8 py-4"
+                onClick={openConnectModal}
               >
                 Get Started
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
-            ) : (
-              <ConnectButton.Custom>
-                {({ openConnectModal }) => (
-                  <Button 
-                    variant="gold" 
-                    size="xl" 
-                    className="group"
-                    onClick={openConnectModal}
-                  >
-                    Get Started
-                    <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Button>
-                )}
-              </ConnectButton.Custom>
             )}
-          </div>
-
-          {/* Trust indicators */}
-          <div className="pt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground animate-fade-in-delay-3">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              Always Available
-            </span>
-            <span className="w-px h-3 bg-border" />
-            <span>Free to Explore</span>
-          </div>
-        </div>
+          </ConnectButton.Custom>
+        )}
       </div>
+
+      {/* Trust indicators */}
+      
     </div>
   );
 };
