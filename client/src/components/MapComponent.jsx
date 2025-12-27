@@ -24,14 +24,22 @@ const getCustomIcon = (isUnlocked) => {
   });
 };
 
-const MapComponent = () => {
+const MapComponent = ({ 
+  center = [22.5726, 88.3639], // Default to Kolkata
+  zoom = 13,
+  height = '100vh',
+  width = '100%',
+  showClustering = true,
+  onSiteClick = null,
+  customSites = null
+}) => {
   const [sites, setSites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [narratingSites, setNarratingSites] = useState(new Set());
   const [unlockedHistory, setUnlockedHistory] = useState([]);
   const [heritageUnlocked, setHeritageUnlocked] = useState([]);
   
-  const kolkataPosition = [22.5726, 88.3639];
+  const kolkataPosition = center;
 
   const handleNarrate = async (siteName, siteId) => {
     setNarratingSites(prev => new Set(prev).add(siteId));
@@ -70,6 +78,13 @@ const MapComponent = () => {
   useEffect(() => {
     const fetchSites = async () => {
       try {
+        // Use custom sites if provided, otherwise fetch from API
+        if (customSites) {
+          setSites(customSites);
+          setLoading(false);
+          return;
+        }
+        
         // Pointing to your Requestly Bridge
         const response = await fetch('https://api.sonarkolkata.com/heritage-sites');
         const data = await response.json();
@@ -136,7 +151,7 @@ const MapComponent = () => {
     };
 
     fetchSites();
-  }, []);
+  }, [customSites]);
 
   if (loading) {
     return (
@@ -149,8 +164,8 @@ const MapComponent = () => {
   return (
     <MapContainer
       center={kolkataPosition}
-      zoom={13}
-      style={{ height: '100vh', width: '100%' }}
+      zoom={zoom}
+      style={{ height: height, width: width }}
       zoomControl={false}
     >
       <TileLayer
@@ -158,9 +173,10 @@ const MapComponent = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       
-      {/* 3. Group the 50 markers into clusters */}
-      <MarkerClusterGroup chunkedLoading>
-        {sites.map((site) => {
+      {/* Group the markers into clusters if clustering is enabled */}
+      {showClustering ? (
+        <MarkerClusterGroup chunkedLoading>
+          {sites.map((site) => {
             const isUnlocked = unlockedHistory.includes(site.id);
             return (
               <Marker 
@@ -169,6 +185,85 @@ const MapComponent = () => {
                 icon={getCustomIcon(isUnlocked)}
                 eventHandlers={{
                   click: async () => {
+                    if (onSiteClick) {
+                      onSiteClick(site);
+                    } else {
+                      // Default behavior
+                      try {
+                        console.log(`Fetching narration for: ${site.name}`);
+                        const response = await fetch('http://localhost:5678/webhook-test/narrate-heritage', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            name: site.name
+                          })
+                        });
+                        
+                        const responseData = await response.json();
+                        console.log('n8n response:', responseData);
+                      } catch (error) {
+                        console.error('Error fetching narration:', error);
+                      }
+                    }
+                  }
+                }}
+              >
+                <Popup>
+                  <div className="text-center p-2">
+                    <h3 className="font-bold text-[#A52A2A] text-lg">{site.name}</h3>
+                    <p className="text-xs text-gray-500 italic mb-2">Heritage Hub</p>
+                    <button 
+                      className="bg-[#A52A2A] text-white px-3 py-1 rounded-full text-xs hover:opacity-80 transition-all"
+                      onClick={async () => {
+                        try {
+                          const response = await fetch('http://localhost:5678/webhook-test/narrate-heritage', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ site_name: site.name, full_history: site.history_details })
+                          });
+
+                          const data = await response.blob();
+                          const audioUrl = URL.createObjectURL(data);
+                          const audio = new Audio(audioUrl);
+
+                          audio.play().then(() => {
+                            setUnlockedHistory(prev => [...prev, site.id]);
+                          }).catch(e => console.error("Playback failed:", e));
+                          audio.onended = () => {
+                            URL.revokeObjectURL(audioUrl);
+                          };
+
+                        } catch (error) {
+                          console.error('Narration Error:', error);
+                          alert('The city is quiet right now... check if n8n is running!');
+                        }
+                      }}
+                    >
+                      Hear the Story
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MarkerClusterGroup>
+      ) : (
+        // Render markers without clustering
+        sites.map((site) => {
+          const isUnlocked = unlockedHistory.includes(site.id);
+          return (
+            <Marker 
+              key={site.id} 
+              position={[site.lat, site.lng]} 
+              icon={getCustomIcon(isUnlocked)}
+              eventHandlers={{
+                click: async () => {
+                  if (onSiteClick) {
+                    onSiteClick(site);
+                  } else {
+                    // Default behavior
                     try {
                       console.log(`Fetching narration for: ${site.name}`);
                       const response = await fetch('http://localhost:5678/webhook-test/narrate-heritage', {
@@ -187,49 +282,48 @@ const MapComponent = () => {
                       console.error('Error fetching narration:', error);
                     }
                   }
-                }}
-              >
-            <Popup>
-              <div className="text-center p-2">
-                <h3 className="font-bold text-[#A52A2A] text-lg">{site.name}</h3>
-                <p className="text-xs text-gray-500 italic mb-2">Heritage Hub</p>
-                <button 
-                  className="bg-[#A52A2A] text-white px-3 py-1 rounded-full text-xs hover:opacity-80 transition-all"
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('http://localhost:5678/webhook-test/narrate-heritage', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ site_name: site.name, full_history: site.history_details })
-                      });
+                }
+              }}
+            >
+              <Popup>
+                <div className="text-center p-2">
+                  <h3 className="font-bold text-[#A52A2A] text-lg">{site.name}</h3>
+                  <p className="text-xs text-gray-500 italic mb-2">Heritage Hub</p>
+                  <button 
+                    className="bg-[#A52A2A] text-white px-3 py-1 rounded-full text-xs hover:opacity-80 transition-all"
+                    onClick={async () => {
+                      try {
+                        const response = await fetch('http://localhost:5678/webhook-test/narrate-heritage', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ site_name: site.name, full_history: site.history_details })
+                        });
 
-                      const data = await response.blob(); // Force response to be treated as a file/blob
-                      const audioUrl = URL.createObjectURL(data);
-                      const audio = new Audio(audioUrl);
+                        const data = await response.blob();
+                        const audioUrl = URL.createObjectURL(data);
+                        const audio = new Audio(audioUrl);
 
-                      // Add these listeners to bypass browser 'auto-play' blocks
-                      audio.play().then(() => {
-                        // Mark as visited when audio starts playing
-                        setUnlockedHistory(prev => [...prev, site.id]);
-                      }).catch(e => console.error("Playback failed:", e));
-                      audio.onended = () => {
-                        URL.revokeObjectURL(audioUrl);
-                      };
+                        audio.play().then(() => {
+                          setUnlockedHistory(prev => [...prev, site.id]);
+                        }).catch(e => console.error("Playback failed:", e));
+                        audio.onended = () => {
+                          URL.revokeObjectURL(audioUrl);
+                        };
 
-                    } catch (error) {
-                      console.error('Narration Error:', error);
-                      alert('The city is quiet right now... check if n8n is running!');
-                    }
-                  }}
-                >
-                  Hear the Story
-                </button>
-              </div>
-            </Popup>
-          </Marker>
-            );
-          })}
-      </MarkerClusterGroup>
+                      } catch (error) {
+                        console.error('Narration Error:', error);
+                        alert('The city is quiet right now... check if n8n is running!');
+                      }
+                    }}
+                  >
+                    Hear the Story
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })
+      )}
     </MapContainer>
   );
 };
