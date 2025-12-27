@@ -21,7 +21,7 @@ const Navbar = ({ onMapClick }: NavbarProps) => {
       icon: <Map className="w-4 h-4" />,
       onClick: onMapClick,
     },
-    { label: "Marketplace", icon: <Store className="w-4 h-4" />, href: "#marketplace" },
+    { label: "Marketplace", icon: <Store className="w-4 h-4" />, href: "/marketplace" },
     { label: "Help", icon: <HelpCircle className="w-4 h-4" />, href: "#help" },
   ];
 

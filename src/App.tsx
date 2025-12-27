@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import MapPage from "./pages/MapPage";
+import Marketplace from "./pages/Marketplace";
  
 const App = () => (
   <TooltipProvider>
@@ -13,6 +14,7 @@ const App = () => (
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/map" element={<MapPage />} />
+      <Route path="/marketplace" element={<Marketplace />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
