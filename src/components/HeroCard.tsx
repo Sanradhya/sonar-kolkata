@@ -64,7 +64,7 @@ const HeroCard = ({ onGetStarted }: HeroCardProps) => {
           <Button 
             variant="gold" 
             size="xl" 
-            className="group text-lg px-8 py-4"
+            className="group text-lg px-8 py-4 glossy-button hover:scale-105 transition-all duration-300"
             onClick={onGetStarted}
           >
             Get Started
@@ -76,7 +76,7 @@ const HeroCard = ({ onGetStarted }: HeroCardProps) => {
               <Button 
                 variant="gold" 
                 size="xl" 
-                className="group text-lg px-8 py-4"
+                className="group text-lg px-8 py-4 glossy-button hover:scale-105 transition-all duration-300"
                 onClick={openConnectModal}
               >
                 Get Started
