@@ -1,4 +1,5 @@
 import { CheckCircle, Sparkles } from "lucide-react";
+import { GlowCard } from "../spotlight-card";
 
 const benefits = [
   "Authentic local experiences curated by Kolkata residents",
@@ -46,22 +47,38 @@ const WhyUseSection = () => {
             <div className="absolute -inset-4 bg-gradient-to-r from-gold/20 via-mustard/10 to-gold/20 rounded-3xl blur-3xl opacity-40" />
             <div className="relative glass-card rounded-2xl p-8 border border-border/30">
               <div className="grid grid-cols-2 gap-4">
-                <div className="glass-card rounded-xl p-6 text-center">
+                <GlowCard
+                  glowColor="gold"
+                  customSize={true}
+                  className="text-center flex flex-col justify-center min-h-[120px]"
+                >
                   <div className="text-4xl font-display font-bold text-gradient-gold">500+</div>
                   <div className="text-muted-foreground text-sm mt-2">Heritage Sites</div>
-                </div>
-                <div className="glass-card rounded-xl p-6 text-center">
+                </GlowCard>
+                <GlowCard
+                  glowColor="gold"
+                  customSize={true}
+                  className="text-center flex flex-col justify-center min-h-[120px]"
+                >
                   <div className="text-4xl font-display font-bold text-gradient-gold">50K+</div>
                   <div className="text-muted-foreground text-sm mt-2">Active Users</div>
-                </div>
-                <div className="glass-card rounded-xl p-6 text-center">
+                </GlowCard>
+                <GlowCard
+                  glowColor="gold"
+                  customSize={true}
+                  className="text-center flex flex-col justify-center min-h-[120px]"
+                >
                   <div className="text-4xl font-display font-bold text-gradient-gold">1K+</div>
                   <div className="text-muted-foreground text-sm mt-2">Local Partners</div>
-                </div>
-                <div className="glass-card rounded-xl p-6 text-center">
+                </GlowCard>
+                <GlowCard
+                  glowColor="gold"
+                  customSize={true}
+                  className="text-center flex flex-col justify-center min-h-[120px]"
+                >
                   <div className="text-4xl font-display font-bold text-gradient-gold">4.9</div>
                   <div className="text-muted-foreground text-sm mt-2">User Rating</div>
-                </div>
+                </GlowCard>
               </div>
             </div>
           </div>
