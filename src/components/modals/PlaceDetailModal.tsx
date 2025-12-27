@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Star, ArrowLeft, ExternalLink, Volume2, VolumeX } from "lucide-react";
+import { PixelImage } from "@/components/ui/pixel-image";
 
 // Import all available place images
 import victoriaMemorial from "@/assets/places/victoria-memorial.jpg";
@@ -96,6 +97,7 @@ const PlaceDetailModal = ({ open, onOpenChange, onBackToMap, place }: PlaceDetai
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioError, setAudioError] = useState(false);
   const [needsUserInteraction, setNeedsUserInteraction] = useState(false);
+  const [showPixelEffect, setShowPixelEffect] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   if (!place) return null;
@@ -239,8 +241,13 @@ const PlaceDetailModal = ({ open, onOpenChange, onBackToMap, place }: PlaceDetai
   // Also try to start audio when the modal content is first rendered
   useEffect(() => {
     if (open) {
+      // Small delay before triggering pixel effect for better UX
+      const pixelTimer = setTimeout(() => {
+        setShowPixelEffect(true);
+      }, 200);
+      
       // Small delay to ensure modal is fully rendered
-      const timer = setTimeout(() => {
+      const audioTimer = setTimeout(() => {
         const audio = audioRef.current;
         if (audio && audio.paused && !isMuted) {
           audio.play().catch(error => {
@@ -249,7 +256,13 @@ const PlaceDetailModal = ({ open, onOpenChange, onBackToMap, place }: PlaceDetai
         }
       }, 100);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(pixelTimer);
+        clearTimeout(audioTimer);
+      };
+    } else {
+      // Reset pixel effect when modal closes
+      setShowPixelEffect(false);
     }
   }, [open, isMuted]);
 
@@ -341,13 +354,27 @@ const PlaceDetailModal = ({ open, onOpenChange, onBackToMap, place }: PlaceDetai
         <div className="grid md:grid-cols-2 gap-6">
           {/* Left - Image and Name */}
           <div className="space-y-4">
-            <div className="aspect-square rounded-xl overflow-hidden border border-border/30">
+            <div className="aspect-square rounded-xl overflow-hidden border border-border/30 relative bg-secondary/10">
               {details.image ? (
-                <img
-                  src={details.image}
-                  alt={details.name}
-                  className="w-full h-full object-cover"
-                />
+                showPixelEffect ? (
+                  <div className="w-full h-full">
+                    <PixelImage
+                      src={details.image}
+                      grid="6x4"
+                      grayscaleAnimation={true}
+                      pixelFadeInDuration={600}
+                      maxAnimationDelay={800}
+                      colorRevealDelay={900}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-secondary/20 flex items-center justify-center">
+                    <div className="text-center text-muted-foreground">
+                      <MapPin className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                      <p className="text-sm">Loading...</p>
+                    </div>
+                  </div>
+                )
               ) : (
                 <div className="w-full h-full bg-black flex items-center justify-center">
                   <div className="text-center text-white/60">

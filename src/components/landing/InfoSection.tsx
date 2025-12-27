@@ -1,5 +1,6 @@
 import { Button } from "../ui/button";
 import { ArrowRight, Building2, Palette, Utensils } from "lucide-react";
+import { GlowCard } from "../spotlight-card";
 
 const categories = [
   {
@@ -38,13 +39,14 @@ const InfoSection = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {categories.map((category, index) => (
-            <div
+          {categories.map((category) => (
+            <GlowCard
               key={category.title}
-              className="group relative overflow-hidden rounded-2xl"
+              glowColor="gold"
+              customSize={true}
+              className="group relative overflow-hidden h-full flex flex-col"
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
-              <div className="relative glass-card rounded-2xl p-8 h-full border border-border/30 hover:border-gold/30 transition-all duration-300">
+              <div className="flex-1">
                 <div className="w-14 h-14 rounded-xl bg-gold/20 flex items-center justify-center mb-6">
                   <category.icon className="w-7 h-7 text-gold" />
                 </div>
@@ -54,15 +56,15 @@ const InfoSection = () => {
                 <p className="text-muted-foreground mb-4 leading-relaxed">
                   {category.description}
                 </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-gold text-sm font-medium">{category.count}</span>
-                  <Button variant="ghost" size="sm" className="group/btn text-muted-foreground hover:text-gold">
-                    Explore
-                    <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
-                </div>
               </div>
-            </div>
+              <div className="flex items-center justify-between mt-auto">
+                <span className="text-gold text-sm font-medium">{category.count}</span>
+                <Button variant="ghost" size="sm" className="group/btn text-muted-foreground hover:text-gold">
+                  Explore
+                  <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover/btn:translate-x-1" />
+                </Button>
+              </div>
+            </GlowCard>
           ))}
         </div>
       </div>

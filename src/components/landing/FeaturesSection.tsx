@@ -1,4 +1,5 @@
 import { MapPin, ShoppingBag, Compass, Camera, Heart, Users } from "lucide-react";
+import { GlowCard } from "../spotlight-card";
 
 const features = [
   {
@@ -50,21 +51,25 @@ const FeaturesSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <div
+            <GlowCard
               key={feature.title}
-              className="group glass-card rounded-xl p-6 hover:border-gold/30 transition-all duration-300 hover:shadow-glow"
+              glowColor="gold"
+              customSize={true}
+              className="group transition-all duration-300 flex flex-col"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="w-12 h-12 rounded-lg bg-secondary/60 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors">
-                <feature.icon className="w-6 h-6 text-gold" />
+              <div className="flex-1">
+                <div className="w-12 h-12 rounded-lg bg-secondary/60 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors">
+                  <feature.icon className="w-6 h-6 text-gold" />
+                </div>
+                <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
+            </GlowCard>
           ))}
         </div>
       </div>
