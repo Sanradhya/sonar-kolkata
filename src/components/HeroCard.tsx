@@ -1,11 +1,15 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 interface HeroCardProps {
   onGetStarted: () => void;
 }
 
 const HeroCard = ({ onGetStarted }: HeroCardProps) => {
+  const { isConnected } = useAccount();
+
   return (
     <div className="relative w-full max-w-lg mx-auto animate-fade-in-delay-1">
       {/* Ambient glow behind card */}
@@ -45,15 +49,31 @@ const HeroCard = ({ onGetStarted }: HeroCardProps) => {
 
           {/* CTA Button */}
           <div className="pt-4 animate-fade-in-delay-3">
-            <Button 
-              variant="gold" 
-              size="xl" 
-              className="group animate-glow-pulse"
-              onClick={onGetStarted}
-            >
-              Get Started
-              <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Button>
+            {isConnected ? (
+              <Button 
+                variant="gold" 
+                size="xl" 
+                className="group"
+                onClick={onGetStarted}
+              >
+                Get Started
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Button>
+            ) : (
+              <ConnectButton.Custom>
+                {({ openConnectModal }) => (
+                  <Button 
+                    variant="gold" 
+                    size="xl" 
+                    className="group"
+                    onClick={openConnectModal}
+                  >
+                    Get Started
+                    <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Button>
+                )}
+              </ConnectButton.Custom>
+            )}
           </div>
 
           {/* Trust indicators */}

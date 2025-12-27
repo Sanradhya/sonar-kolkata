@@ -1,6 +1,7 @@
 import { Map, Store, HelpCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
+import RainbowLoginButton from "./RainbowLoginButton";
 
 interface NavItem {
   label: string;
@@ -15,14 +16,15 @@ interface NavbarProps {
 
 const Navbar = ({ onMapClick }: NavbarProps) => {
   const navItems: NavItem[] = [
-    { 
-      label: "Map", 
-      icon: <Map className="w-4 h-4" />, 
-      onClick: onMapClick 
+    {
+      label: "Map",
+      icon: <Map className="w-4 h-4" />,
+      onClick: onMapClick,
     },
     { label: "Marketplace", icon: <Store className="w-4 h-4" />, href: "#marketplace" },
     { label: "Help", icon: <HelpCircle className="w-4 h-4" />, href: "#help" },
   ];
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 animate-fade-in">
       <div className="glass-card border-b border-border/20">
@@ -56,7 +58,7 @@ const Navbar = ({ onMapClick }: NavbarProps) => {
                       {item.icon}
                       <span className="hidden sm:inline">{item.label}</span>
                     </>
-                  ) : item.href?.startsWith('/') ? (
+                  ) : item.href?.startsWith("/") ? (
                     <Link to={item.href}>
                       {item.icon}
                       <span className="hidden sm:inline">{item.label}</span>
@@ -69,6 +71,9 @@ const Navbar = ({ onMapClick }: NavbarProps) => {
                   )}
                 </Button>
               ))}
+
+              {/* RainbowKit Login Button */}
+              <RainbowLoginButton />
             </div>
           </div>
         </div>
@@ -78,3 +83,8 @@ const Navbar = ({ onMapClick }: NavbarProps) => {
 };
 
 export default Navbar;
+
+
+
+
+
