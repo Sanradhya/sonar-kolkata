@@ -4,6 +4,12 @@
 
 **Sonar Kolkata** is a Web3-enabled React application that combines heritage site exploration with blockchain technology. Built using Kiro AI assistant, this project demonstrates the power of AI-assisted development for creating complex, modern web applications.
 
+## 🎥 Demo Video
+
+**[Watch the 5-minute Kiro development demonstration](YOUR_YOUTUBE_URL_HERE)**
+
+*This video showcases how Kiro accelerated development from 26+ hours to just 5.5 hours while improving code quality and generating comprehensive documentation.*
+
 ## 🎯 Project Goals
 
 - Create an interactive map showcasing Kolkata's heritage sites
