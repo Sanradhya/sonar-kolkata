@@ -1,7 +1,8 @@
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import logo from "@/assets/logo/logo.png";
 
 interface HeroCardProps {
   onGetStarted: () => void;
@@ -11,19 +12,20 @@ const HeroCard = ({ onGetStarted }: HeroCardProps) => {
   const { isConnected } = useAccount();
 
   return (
-    <div className="relative w-full text-center space-y-8 animate-fade-in-delay-1 py-12">
+    <div className="relative w-full text-center space-y-6 animate-fade-in-delay-1 py-8">
       {/* Ambient background effects */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-pulse-soft" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-mustard/5 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }} />
       </div>
 
-      {/* Badge */}
-      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-gold/20 animate-fade-in-delay-2 backdrop-blur-sm">
-        <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
-        <span className="text-xs font-medium text-gold tracking-widest uppercase">
-          Discover Heritage
-        </span>
+      {/* Logo Badge */}
+      <div className="inline-flex items-center justify-center animate-fade-in-delay-2">
+        <img 
+          src={logo} 
+          alt="Sonar Kolkata Logo" 
+          className="w-24 h-24 object-contain drop-shadow-lg"
+        />
       </div>
 
       {/* Title - Full Width */}
